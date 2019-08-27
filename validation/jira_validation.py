@@ -17,4 +17,4 @@ def validate_jira_login(jira_host, jira_user, jira_service):
         else:
             puts(colored.green('Authenticated in ' + jira_host))
             puts(colored.green(
-                'Connected to JIRA as ' + jira_service.get_jira_name() + '(' + jira_service.get_jira_username() + ')'))
+                'Connected to JIRA as ' + jira_service.get_jira_name() + ' (' + jira_service.get_jira_username() + ')'))

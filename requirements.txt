@@ -1,0 +1,5 @@
+clint >= 0.5.1
+pyfiglet >= 0.8.post1
+gitpython >= 3.0.2
+jira >= 2.0.0
+python-gitlab >= 1.10.0
