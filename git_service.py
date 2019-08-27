@@ -1,4 +1,4 @@
-from git import Repo, InvalidGitRepositoryError
+from git import Repo
 
 
 def is_git_repo(path):
@@ -14,8 +14,8 @@ def has_git_remote(path):
 
 
 def get_remote(path):
-    return Repo(path).remotes[0]
+    return Repo(path).remotes.origin.url
 
 
 def get_branch(path):
-    return Repo(path).active_branch
+    return Repo(path).active_branch.name
