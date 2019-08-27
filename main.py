@@ -1,65 +1,36 @@
-import sys
-
-from clint.textui import puts, indent, colored
+from clint.textui import puts, colored
 from pyfiglet import Figlet
 
-import git_service
-import path_service
+from service.config_service import ConfigService
+from service.git_service import GitService
+from service.jira_service import JiraService
+from service.path_service import PathService
+from validation import git_validation, path_validation, jira_validation
 
 figlet = Figlet(font='slant')
+path_service: PathService
+config_service: ConfigService
+git_service: GitService
+jira_service: JiraService
 
 
 def main():
     print(figlet.renderText('HLDP MR GEN'))
-    path = path_service.get_path()
+    init()
+    puts(colored.blue('Validating filesystem path'))
+    path_validation.validate_path(path_service)
     puts(colored.blue('Validating git configuration'))
-    validate_git_configuration(path)
+    git_validation.validate_git(git_service)
+    puts(colored.blue('Validating JIRA connection'))
+    jira_validation.validate_jira_connection(config_service, jira_service)
 
 
-def validate_git_configuration(path):
-    validate_path(path)
-    validate_repository(path)
-    validate_branch(path)
-    validate_remote(path)
-
-def validate_path(path):
-    with indent(4, '->'):
-        if path is None:
-            puts(colored.red('No path provided'))
-            sys.exit()
-        elif not path_service.is_pathname_valid(path):
-            puts(colored.red('Invalid path provided'))
-            sys.exit()
-        else:
-            puts(colored.green('Running in ' + path))
-
-def validate_repository(path):
-    with indent(4, '->'):
-        if not git_service.is_git_repo(path):
-            puts(colored.red('Not a git repository'))
-            sys.exit()
-        else:
-            puts(colored.green('Git repository configured'))
-
-def validate_remote(path):
-    with indent(4, '->'):
-        if not git_service.has_git_remote(path):
-            puts(colored.red('No remote attached'))
-            sys.exit()
-        else:
-            puts(colored.green('Attached to remote ' + git_service.get_remote(path)))
-
-
-def validate_branch(path):
-    with indent(4, '->'):
-        if git_service.get_branch(path) is None:
-            puts(colored.red('No active branch inside repository'))
-            sys.exit()
-        elif not path_service.is_pathname_valid(path):
-            puts(colored.red('Invalid path provided'))
-            sys.exit()
-        else:
-            puts(colored.green('Selected branch ' + git_service.get_branch(path)))
+def init():
+    global path_service, git_service, jira_service, config_service
+    path_service = PathService()
+    config_service = ConfigService()
+    git_service = GitService(path_service.path)
+    jira_service = JiraService()
 
 
 if __name__ == "__main__":
