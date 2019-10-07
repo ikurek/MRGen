@@ -29,8 +29,8 @@ def validate_remote(git_service):
 
 def validate_branch(git_service):
     with indent(4, '->'):
-        if git_service.get_branch() is None:
+        if git_service.get_current_branch() is None:
             puts(colored.red('No active branch inside repository'))
             sys.exit()
         else:
-            puts(colored.green('Selected branch ' + git_service.get_branch()))
+            puts(colored.green('Selected branch ' + git_service.get_current_branch()))

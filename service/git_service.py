@@ -3,9 +3,13 @@ from git import Repo
 
 class GitService:
 
-    def __init__(self, path):
+    def __init__(self, path, args):
         self.path = path
         self.repo = Repo(path)
+        if args.target is not None:
+            self.target_branch = args.target
+        else:
+            self.target_branch = 'develop'
 
     def is_git_repo(self):
         try:
@@ -20,12 +24,12 @@ class GitService:
     def get_remote(self):
         return self.repo.remotes.origin.url
 
-    def get_branch(self):
+    def get_current_branch(self):
         return self.repo.active_branch.name
 
-    def print_commits(self):
-        develop_commits = list(self.repo.iter_commits('develop'))
-        current_commits = list(self.repo.iter_commits(self.get_branch()))
+    def generate_current_branch_commits(self):
+        develop_commits = list(self.repo.iter_commits(self.target_branch))
+        current_commits = list(self.repo.iter_commits(self.get_current_branch()))
         for commit in current_commits:
-            if not develop_commits.__contains__(commit):
-                print(commit)
+            if commit not in develop_commits:
+                yield commit

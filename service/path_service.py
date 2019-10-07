@@ -7,9 +7,9 @@ class PathService:
     ERROR_INVALID_NAME = 123
     path: str
 
-    def __init__(self) -> None:
-        if len(sys.argv) > 1 and sys.argv[1] is not None:
-            self.path = sys.argv[1]
+    def __init__(self, args) -> None:
+        if args.path is not None:
+            self.path = args.path
         else:
             self.path = os.getcwd()
 
