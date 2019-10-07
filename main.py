@@ -23,6 +23,7 @@ def main():
     git_validation.validate_git(git_service)
     puts(colored.blue('Validating JIRA connection'))
     jira_validation.validate_jira_connection(config_service, jira_service)
+    git_service.print_commits()
 
 
 def init():

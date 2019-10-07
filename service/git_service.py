@@ -22,3 +22,10 @@ class GitService:
 
     def get_branch(self):
         return self.repo.active_branch.name
+
+    def print_commits(self):
+        develop_commits = list(self.repo.iter_commits('develop'))
+        current_commits = list(self.repo.iter_commits(self.get_branch()))
+        for commit in current_commits:
+            if not develop_commits.__contains__(commit):
+                print(commit)
