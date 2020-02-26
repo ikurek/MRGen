@@ -25,10 +25,10 @@ class GitService:
         else:
             self.source_branch = self.get_current_branch()
 
-        if args.nopull is not None:
-            self.should_pull = not args.nopull
+        if args.git_pull is not None:
+            self.should_pull = args.git_pull
         else:
-            self.should_pull = True
+            self.should_pull = False
 
     def is_git_repo(self):
         try:

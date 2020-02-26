@@ -5,20 +5,17 @@ from pyfiglet import Figlet
 
 from service.config_service import ConfigService
 from service.git_service import GitService
-from service.gitlab_service import GitlabService
 from service.jira_service import JiraService
 from service.merge_request_service import MergeRequestService
 from service.path_service import PathService
-from ui import git_validation, path_validation, jira_validation, gitlab_validation
+from ui import git_validation, path_validation, jira_validation
 
 args: argparse.Namespace
-
 figlet = Figlet(font='slant')
 path_service: PathService
 config_service: ConfigService
 git_service: GitService
 jira_service: JiraService
-gitlab_service: GitlabService
 
 
 def main():
@@ -31,16 +28,13 @@ def main():
     git_validation.validate_git(git_service)
     puts(colored.blue('Validating JIRA connection'))
     jira_validation.validate_jira_connection(config_service, jira_service)
-    puts(colored.blue('Validating GitLab connection'))
-    gitlab_validation.validate_gitlab_connection(config_service, gitlab_service)
     puts(colored.blue('Searching for issue keys'))
-    merge_request_service = MergeRequestService(git_service, jira_service, gitlab_service)
+    merge_request_service = MergeRequestService(git_service, jira_service)
     merge_request_service.get_issue_keys()
     puts(colored.blue('Getting issue info from JIRA'))
     merge_request_service.get_issues_by_keys()
     puts(colored.blue('Building markdown message'))
     merge_request_service.build_merge_request_message()
-
 
 
 def parse_args():
@@ -49,8 +43,8 @@ def parse_args():
     argument_parser.add_argument('-p', '--path', action='store', type=str, help='Path of git repo')
     argument_parser.add_argument('-s', '--source', action='store', type=str, help='Source branch to be merged')
     argument_parser.add_argument('-t', '--target', action='store', type=str, help='Target branch to merge into')
-    argument_parser.add_argument('-np', '--nopull', action='store_true',
-                                 help='Skip pulling changes from target/source branches')
+    argument_parser.add_argument('-g', '--git-pull', action='store_true',
+                                 help='Pull changes from target/source branches before creating MR')
     args = argument_parser.parse_args()
 
 
@@ -60,7 +54,6 @@ def init():
     config_service = ConfigService()
     git_service = GitService(path_service.path, args)
     jira_service = JiraService()
-    gitlab_service = GitlabService()
 
 
 if __name__ == "__main__":

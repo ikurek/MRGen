@@ -1,5 +1,4 @@
 from service.git_service import GitService
-from service.gitlab_service import GitlabService
 from service.jira_service import JiraService
 from service.merge_request_markdown_service import MergeRequestMarkdownService
 from ui import merge_request_ui
@@ -8,14 +7,12 @@ from ui import merge_request_ui
 class MergeRequestService:
     git_service: GitService
     jira_service: JiraService
-    gitlab_service: GitlabService
     issue_keys: list
     issues: list
 
-    def __init__(self, git_service, jira_service, gitlab_service):
+    def __init__(self, git_service, jira_service):
         self.git_service = git_service
         self.jira_service = jira_service
-        self.gitlab_service = gitlab_service
 
     def get_issue_keys(self):
         self.issue_keys = self.git_service.get_jira_issue_codes_from_commits()

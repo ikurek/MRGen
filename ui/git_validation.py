@@ -51,16 +51,15 @@ def validate_commits(git_service):
 def validate_branch_pull(git_service):
     with indent(4, '->'):
         if git_service.should_pull:
+            puts(colored.white('Pulling branches (--git-pull flag is set)'))
             if not git_service.pull_target_branch():
-                puts(colored.green('Could not pull target branch ' + git_service.target_branch))
+                puts(colored.red('Could not pull target branch ' + git_service.target_branch))
                 sys.exit()
             else:
-                puts(colored.red('Pulled target branch ' + git_service.target_branch))
+                puts(colored.green('Pulled target branch ' + git_service.target_branch))
 
             if not git_service.pull_source_branch():
-                puts(colored.green('Could not pull source branch ' + git_service.source_branch))
+                puts(colored.red('Could not pull source branch ' + git_service.source_branch))
                 sys.exit()
             else:
-                puts(colored.red('Pulled source branch ' + git_service.source_branch))
-        else:
-            puts(colored.white('Skipped pulling branches (--nopull flag is set)'))
+                puts(colored.green('Pulled source branch ' + git_service.source_branch))
